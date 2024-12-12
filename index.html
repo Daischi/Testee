@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentando</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #242121;
+            color: aliceblue;
+        }
+
+        h1 {
+            margin-top: 10%;
+            font-size: 2rem;
+            color: #ffffff;
+            padding: 0 10px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            position: relative;
+            height: 300px; /* Altura suficiente para movimentar os botões */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #yes-button {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        #no-button {
+            background-color: #f44336;
+            color: white;
+            position: absolute;
+        }
+
+        .confetti, .heart {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            animation: fall 2s linear infinite;
+        }
+
+        .heart {
+            width: 20px;
+            height: 20px;
+            background-color: pink;
+            clip-path: polygon(50% 0%, 61% 13%, 73% 7%, 85% 17%, 100% 34%, 91% 48%, 80% 58%, 50% 100%, 20% 58%, 9% 48%, 0% 34%, 15% 17%, 27% 7%, 39% 13%);
+            animation: rise 2s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100%);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Estilização para dispositivos móveis */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+                margin-top: 20%;
+            }
+
+            .button-container {
+                height: 200px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9rem;
+                width: 100px; /* Define a largura para ambos */
+                height: 40px; /* Define a altura para ambos */
+            }
+
+            #no-button {
+                width: 100px; /* Garantia de mesmo tamanho */
+                height: 40px; /* Garantia de mesmo tamanho */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 id="phrase">Oláaa gigi!! <br> Vc poderia me dar mais 1 kiss? :> </h1>
+    <div class="button-container">
+        <button id="yes-button">Sim</button>
+        <button id="no-button">Não</button>
+    </div>
+
+    <script>
+        const phrases = [
+            "Só maiss ummm 😣😖",
+            "Não vou deixar vc clicar no Não 😡",
+            "Paraaaaaaaaaa 😣😣😣😣",
+            "Eu quem fiz o site, vc nunca vai clicar no Não 😁",
+            "E agora ?? kkkkkkk não tem mais opçãoooo hahaha 🤓"
+        ];
+
+        const yesButton = document.getElementById('yes-button');
+        const noButton = document.getElementById('no-button');
+        const phraseElement = document.getElementById('phrase');
+        let noClickCount = 0;
+
+        noButton.addEventListener('click', () => {
+            // Display the next phrase in order
+            if (noClickCount < phrases.length) {
+                phraseElement.textContent = phrases[noClickCount];
+                noClickCount++;
+            }
+
+            // Move button to a random position
+            const container = noButton.parentElement;
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+
+            const randomX = Math.random() * (containerWidth - noButton.offsetWidth);
+            const randomY = Math.random() * (containerHeight - noButton.offsetHeight);
+
+            noButton.style.left = `${randomX}px`;
+            noButton.style.top = `${randomY}px`;
+
+            // If all phrases are shown, add a second "Sim" button and hide "Não"
+            if (noClickCount >= phrases.length) {
+                const secondYesButton = document.createElement('button');
+                secondYesButton.textContent = "Sim";
+                secondYesButton.style.backgroundColor = "#4caf50";
+                secondYesButton.style.color = "white";
+                secondYesButton.style.padding = "10px 20px";
+                secondYesButton.style.fontSize = "1rem";
+                secondYesButton.style.border = "none";
+                secondYesButton.style.borderRadius = "5px";
+                secondYesButton.style.cursor = "pointer";
+                secondYesButton.addEventListener('click', onYesClick);
+                noButton.parentElement.appendChild(secondYesButton);
+
+                noButton.style.display = "none";
+            }
+        });
+
+        // Reusable function for "Yes" button click
+        function onYesClick() {
+            phraseElement.textContent = "Ebbaaaaaaaa sabia que ia aceitar :) ❤️";
+            showEffects();
+
+            // Close the page after 7 seconds
+            setTimeout(() => {
+                window.open('', '_self', '');
+                window.close();
+            }, 7000);
+        }
+
+        // Attach the reusable function to the main "Yes" button
+        yesButton.addEventListener('click', onYesClick);
+
+        function showEffects() {
+            showConfetti();
+            showHearts();
+        }
+
+        function showConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                document.body.appendChild(confetti);
+
+                const startX = Math.random() * window.innerWidth;
+                const delay = Math.random() * 2;
+                const fallDuration = 2 + Math.random();
+
+                confetti.style.left = `${startX}px`;
+                confetti.style.animationDuration = `${fallDuration}s`;
+                confetti.style.animationDelay = `${delay}s`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+                setTimeout(() => confetti.remove(), fallDuration * 1000);
+            }
+        }
+
+        function showHearts() {
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                document.body.appendChild(heart);
+
+                const startX = Math.random() * window.innerWidth;
+                const delay = Math.random() * 2;
+                const riseDuration = 2 + Math.random();
+
+                heart.style.left = `${startX}px`;
+                heart.style.animationDuration = `${riseDuration}s`;
+                heart.style.animationDelay = `${delay}s`;
+
+                setTimeout(() => heart.remove(), riseDuration * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
